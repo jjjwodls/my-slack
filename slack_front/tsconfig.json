@@ -1,0 +1,22 @@
+{
+  "compilerOptions": {
+    "esModuleInterop": true, //import React from 'react'; 로 가져올 수 있도록 해줌.
+    "sourceMap": true, //소스맵으로 소스 찾을 수 있도록,
+    "lib": ["ES2020","DOM"],
+    "jsx": "react",
+    "module": "esnext", //
+    "moduleResolution": "Node", //노드도 import,export 해석하게 허용해주겟다.
+    "target": "es5", //es2020으로 작성해도 es5로 변환해준다.
+    "strict": true, //항상 strice를 true로 되어야 typescript 가 의미있음(any 때문에... any 쓰는게 별로 안좋다.)
+    "resolveJsonModule": true, 
+    "baseUrl": ".",  //import  url 허용해주겠다.
+    "paths": { //상대path ../../../ 를 절대path로 변경해주겠다. import A from @component/test.tsx
+      "@hooks/*" :["hooks/*"],
+      "@components/*" :["components/*"],
+      "@layouts/*" :["layouts/*"],
+      "@pages/*" : ["pages/*"],
+      "@utils/*" : ["utils/*"],
+      "@typings/*" : ["typings/*"]
+    }
+  }
+}

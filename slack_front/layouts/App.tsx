@@ -1,9 +1,17 @@
 import React from "react";
+import { Switch, Route, Redirect } from 'react-router-dom';
+import Login from '@pages/Login';
+import SignUp from '@pages/SignUp';
 
 const App = () => {
-  return(
-    <div>render 입니다 config 설정 할 때 버전 문제로 많은 해결책을 겪었음.</div>
-  )
+  return (
+    <Switch>
+      <Redirect exact path="/" to="/login" />
+      <Route path="/login" component={Login} />
+      <Route path="/signup" component={SignUp} />
+    </Switch>
+  );
+
 }
 
 export default App;

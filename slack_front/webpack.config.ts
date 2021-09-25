@@ -1,9 +1,9 @@
-import path from "path";
+import path from 'path';
 import webpack, { Configuration as WebpackConfiguration } from 'webpack';
-import ForkTsCheckerWebpackPlugin from 'fork-ts-checker-webpack-plugin' //타입스크립트 체킹과 웹팩 체킹을 동시에 돌아가도록 해줌.
+import ForkTsCheckerWebpackPlugin from 'fork-ts-checker-webpack-plugin'; //타입스크립트 체킹과 웹팩 체킹을 동시에 돌아가도록 해줌.
 import ReactRefreshWebpackPlugin from '@pmmmwh/react-refresh-webpack-plugin';
 
-import { Configuration as WebpackDevServerConfiguration } from "webpack-dev-server";
+import { Configuration as WebpackDevServerConfiguration } from 'webpack-dev-server';
 
 interface Configuration extends WebpackConfiguration {
   devServer?: WebpackDevServerConfiguration;
@@ -16,7 +16,8 @@ const config: Configuration = {
   devtool: isDeveloment ? 'hidden-source-map' : 'inline-source-map',
   resolve: {
     extensions: ['.js', '.jsx', '.ts', '.tsx', '.json'], //babel이 처리할 확장자
-    alias: { // 
+    alias: {
+      //
       '@hooks': path.resolve(__dirname, 'hooks'), // webpack에서 설정 babel에서 체크하기 위해
       '@components': path.resolve(__dirname, 'components'),
       '@layouts': path.resolve(__dirname, 'layouts'),
@@ -26,7 +27,7 @@ const config: Configuration = {
     },
   },
   entry: {
-    app: './client'
+    app: './client',
   },
   module: {
     rules: [
@@ -39,7 +40,7 @@ const config: Configuration = {
               '@babel/preset-env',
               {
                 targets: { browsers: ['IE 10'] },
-                debug: isDeveloment
+                debug: isDeveloment,
               },
             ],
             '@babel/preset-react',
@@ -47,7 +48,10 @@ const config: Configuration = {
           ], //모든 소스코드를 ie에서까지 돌아 갈 수 있도록 만들어준다. babel이
           env: {
             development: {
-              plugins: [require.resolve('react-refresh/babel')], //hot reloading 에 필요한.
+              plugins: [['@emotion', { sourceMap: true }], require.resolve('react-refresh/babel')], //hot reloading 에 필요한.
+            },
+            production: {
+              plugins: ['@emotion'], //hot reloading 에 필요한.
             },
           },
         },
@@ -55,16 +59,19 @@ const config: Configuration = {
       },
       {
         test: /\.css?$/,
-        use: ['style-loader', 'css-loader'], //css 파일을 js로 변환시켜준다. 
-      }
-    ]
+        use: ['style-loader', 'css-loader'], //css 파일을 js로 변환시켜준다.
+      },
+    ],
   },
   plugins: [
-    new ForkTsCheckerWebpackPlugin({ //ts와 webpack 동시에 돌아가도록 함.
-      async: false
+    new ForkTsCheckerWebpackPlugin({
+      //ts와 webpack 동시에 돌아가도록 함.
+      async: false,
     }),
     //process.env.NODE_ENV를 접근 가능하도록 해줌.
-    new webpack.EnvironmentPlugin({ NODE_ENV: isDeveloment ? 'development' : 'production' }),
+    new webpack.EnvironmentPlugin({
+      NODE_ENV: isDeveloment ? 'development' : 'production',
+    }),
   ],
   output: {
     path: path.join(__dirname, 'dist'),
@@ -76,6 +83,12 @@ const config: Configuration = {
     port: 3090,
     devMiddleware: { publicPath: '/dist/' },
     static: { directory: path.resolve(__dirname) },
+    // proxy: {
+    //   '/api/': {
+    //     target: 'http://localhost:3095',
+    //     changeOrigin: true,
+    //   },
+    // },
   },
 };
 

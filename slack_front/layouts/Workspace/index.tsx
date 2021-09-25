@@ -5,6 +5,7 @@ import { Redirect } from 'react-router';
 import useSWR from 'swr';
 
 //FC 타입안에 children이 들어있음. 만약 children 사용 안하면 VFC 사용하면된다.
+//style 추가.
 const Workspace: FC = ({ children }) => {
   //전역 스토리지처럼 사용됨.
   const { data, error, revalidate, mutate } = useSWR('http://localhost:3095/api/users', fetcher);

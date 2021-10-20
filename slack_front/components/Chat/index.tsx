@@ -1,4 +1,4 @@
-import { IDM } from '@typings/db';
+import { IChat, IDM } from '@typings/db';
 import React, { useMemo, VFC } from 'react';
 import { ChatWrapper } from './styles';
 import gravatar from 'gravatar';
@@ -8,12 +8,12 @@ import { Link } from 'react-router-dom';
 import { useParams } from 'react-router';
 
 interface Props {
-  data: IDM;
+  data: IDM | IChat;
 }
 
 const Chat: VFC<Props> = ({ data }) => {
   const { workspace } = useParams<{ workspace: string; channel: string }>();
-  const user = data.Sender;
+  const user = 'Sender' in data ? data.Sender : data.User; //DM에게만 Sender 들어있는 속성, 타입가드라고 함.
 
   //@[제스1](7)
   //\d 숫자 +는 1개이상 ?는 0개이상 g는 모두찾기

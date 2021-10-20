@@ -4,6 +4,7 @@ import ForkTsCheckerWebpackPlugin from 'fork-ts-checker-webpack-plugin'; //타�
 import ReactRefreshWebpackPlugin from '@pmmmwh/react-refresh-webpack-plugin';
 
 import { Configuration as WebpackDevServerConfiguration } from 'webpack-dev-server';
+import { BundleAnalyzerPlugin } from 'webpack-bundle-analyzer';
 
 interface Configuration extends WebpackConfiguration {
   devServer?: WebpackDevServerConfiguration;
@@ -13,7 +14,7 @@ const isDeveloment = process.env.NODE_ENV !== 'production';
 const config: Configuration = {
   name: 'sleact',
   mode: isDeveloment ? 'development' : 'production',
-  devtool: isDeveloment ? 'hidden-source-map' : 'inline-source-map',
+  devtool: !isDeveloment ? 'hidden-source-map' : 'inline-source-map',
   resolve: {
     extensions: ['.js', '.jsx', '.ts', '.tsx', '.json'], //babel이 처리할 확장자
     alias: {
@@ -95,6 +96,12 @@ const config: Configuration = {
 if (isDeveloment && config.plugins) {
   config.plugins.push(new webpack.HotModuleReplacementPlugin()); //hot reload 해주는것들
   config.plugins.push(new ReactRefreshWebpackPlugin()); //refresh마다 호출 해주는 socket 플러그인.
+  config.plugins.push(new BundleAnalyzerPlugin({ analyzerMode: 'server', openAnalyzer: true })); //서버를 따로 띄어줘서 보여줌.
+}
+
+if (!isDeveloment && config.plugins) {
+  config.plugins.push(new webpack.LoaderOptionsPlugin({ minimize: true })); //좀 더 최적화 시켜주는 플러그인.
+  config.plugins.push(new BundleAnalyzerPlugin({ analyzerMode: 'static' })); //HTML로 보여줌.
 }
 
 export default config; //요거 빼먹어서 build 안된거 찾음...
